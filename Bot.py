@@ -40,6 +40,10 @@ class client ():
         self.caseocc = []
         self.piecesjouees = []
         self.pieces = ["BDEC","BDEP","BDFC","BDFP","BLEC","BLEP","BLFC","BLFP","SDEC","SDEP","SDFC","SDFP","SLEC","SLEP","SLFC","SLFP"]
+        self.pieces2 = []
+        for i in self.pieces : 
+            self.pieces2.append (set(i))
+        #print (self.pieces2)
         self.s2.listen()  
 
         while self.running == True : 
@@ -64,20 +68,38 @@ class client ():
                             pos = randint(0,15)  
                             if retour["state"]["board"][pos] == None : 
                                 break
-                            else : 
-                                continue
                         
-
-                    piece = randint (0,15)
-                    while self.pieces[piece] in retour["state"]["board"] or self.pieces[piece] == retour["state"]["piece"] :
+                    plateau = []
+                    
+                    for p in retour["state"]["board"]:
+                        if p != None : 
+                            plateau.append(set(p))
+                    #print (plateau)
+                    
+                    while True : 
                         piece = randint (0,15)
+                        #print (self.pieces2[piece])
+                        if self.pieces2[piece] not in plateau :
+                            break
+                    #print(self.pieces2[piece])
+
+
+                    self.pieces = ["BDEC","BDEP","BDFC","BDFP","BLEC","BLEP","BLFC","BLFP","SDEC","SDEP","SDFC","SDFP","SLEC","SLEP","SLFC","SLFP"]
+                    self.pieces2 = []
+                    for i in self.pieces : 
+                        self.pieces2.append (set(i))
+                    choix = ""
+                    for y in self.pieces2[piece] :
+                        choix += y
+                    
+                    #print (choix)
 
 
                     renvoi = {
                         "response" : "move",
                         "move" : {
                             "pos" : pos,
-                            "piece" : self.pieces[piece]
+                            "piece" : choix
                         },
                         "message" : ""
                     }
