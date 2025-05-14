@@ -2,6 +2,41 @@ import socket
 import threading
 import json
 from random import randint
+import numpy as np
+
+def ligne (pieces2, piece) : 
+    for j in piece :              
+        for index, rangée in enumerate (pieces2) :
+            compte = 0
+            for l in rangée :
+                if l != None :  
+                    if j in l : 
+                        compte += 1
+            if compte == 3 :
+                n = 0
+                for indice, colonne in  enumerate (rangée):
+                    n += 1
+                    if colonne == None : 
+                        pos = index * 4 + indice
+                        return pos
+    pos = None
+    return pos
+
+def colonne(pieces2, piece) :
+    for j in piece :  
+        for index in range(4) :
+            colonne = pieces2[:, index]  
+            compte = 0
+            for element in colonne:
+                if element is not None and j in element:
+                    compte += 1
+            if compte == 3:
+                for indice, elements in enumerate(colonne):
+                    if elements is None:
+                        pos = indice * 4 + index
+                        return pos
+    pos = None
+    return pos
 
 class client (): 
     def __init__ (self) : 
@@ -61,13 +96,23 @@ class client ():
                     self.client.sendall (envoi)
 
                 if retour["request"] == "play" :
+
+                    matrice = np.array([[]])
+
+                    for i in retour["state"]["board"] :
+                        matrice = np.append(matrice, i)
+                    matrice = np.reshape(matrice, (4,4))
+
                     if retour["state"]["piece"] == None : 
                         pos = None
-                    else :
-                        while True : 
-                            pos = randint(0,15)  
-                            if retour["state"]["board"][pos] == None : 
-                                break
+                    else : 
+                        pos = ligne(matrice, retour["state"]["piece"])
+                        if pos == None : 
+                            pos = colonne(matrice, retour["state"]["piece"])
+                            while True : 
+                                pos = randint(0,15)  
+                                if retour["state"]["board"][pos] == None : 
+                                    break
                         
                     plateau = []
                     if retour["state"]["piece"] != None :
@@ -84,11 +129,6 @@ class client ():
                             break
                     #print(self.pieces2[piece])
 
-
-                    self.pieces = ["BDEC","BDEP","BDFC","BDFP","BLEC","BLEP","BLFC","BLFP","SDEC","SDEP","SDFC","SDFP","SLEC","SLEP","SLFC","SLFP"]
-                    self.pieces2 = []
-                    for i in self.pieces : 
-                        self.pieces2.append (set(i))
                     choix = ""
                     for y in self.pieces2[piece] :
                         choix += y
