@@ -5,21 +5,21 @@ from random import randint
 
 class client (): 
     def __init__ (self) : 
-        matricule = input("Entrez votre matricule : ")
-        pseudo = input("Entrez votre pseudo : ")
+        matricule = 0
+        pseudo = "The Lion Pong"
         self.host = '0.0.0.0'
         #print (self.host)
-        self.portInscription = int(input("Entrez le port d'inscription : "))
+        self.portInscription = 5001
         s1 = socket.socket (type = socket.SOCK_STREAM)
         s1.bind ((self.host, self.portInscription))
         #s1.settimeout (0.5)
         self.s1 = s1
         self.IPserveur = input("Entrez l'adresse Ip du serveur : ")
-        self.portServeur = int(input("Entrez le numéro de port du serveur : "))
+        self.portServeur = 3000
         self.serveur = (self.IPserveur, self.portServeur)
         
         self.s1.connect (self.serveur)
-        self.portJeu = int(input("Entrez le port de jeu : "))
+        self.portJeu = 2001
         self.inscription = {
                                 "request": "subscribe",
                                 "port": self.portJeu,
