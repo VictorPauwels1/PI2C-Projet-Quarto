@@ -137,7 +137,7 @@ class client ():
                 data = self.client.recv(1024)
 
                 retour = json.loads(data.decode())
-                #print (retour)
+                print (retour)
 
                 if retour["request"] == "ping" :
                     reponse = {"response" : "pong"}
@@ -180,7 +180,7 @@ class client ():
                     for i in plateau : 
                         if i in piecesrestantes :
                             piecesrestantes.remove(set(i))
-                    print(piecesrestantes)
+                    #print(piecesrestantes)
                     
                     if piecesrestantes == [] :
                         choix = None
